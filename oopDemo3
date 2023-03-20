@@ -1,0 +1,65 @@
+import pygame
+import random
+
+# define param
+SCREEN_HEIGHT = 500
+SCREEN_WIDTH = 800
+X_SPEED = 10
+Y_SPEED = 10
+BALL_RADIUS = 10
+COLOR = (255, 255, 255)
+FPS = 50
+
+
+# game loop
+class Circle():
+	def __init__(self, ball_radius=BALL_RADIUS):
+		# create screen
+		self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+		self.ball_radius = ball_radius
+		pygame.display.set_caption("demo3_rebound")
+
+		# default initial velocity
+		self.__dx = X_SPEED
+		self.__dy = Y_SPEED
+
+		# random start location
+		self.x = random.randrange(SCREEN_WIDTH)
+		self.y = random.randrange(SCREEN_HEIGHT)
+
+		# create the circle
+		self.circle = pygame.draw.circle(self.screen, COLOR, (self.x, self.y), ball_radius)
+
+	def move(self):
+		if self.x <= self.ball_radius or self.x >= SCREEN_WIDTH-self.ball_radius:
+			self.__dx = -self.__dx
+		if self.y <= self.ball_radius or self.y >= SCREEN_HEIGHT-self.ball_radius:
+			self.__dy = -self.__dy
+		self.x += self.__dx
+		self.y += self.__dy
+
+	def update(self):
+		pygame.draw.circle(self.screen, COLOR, (self.x, self.y), self.ball_radius)
+
+
+
+# animate loop
+circle = Circle()
+pygame.init()
+clock = pygame.time.Clock()
+
+
+run = True
+while run:
+	circle.screen.fill((0, 0, 0))
+	# quit game
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			run = False
+
+	# animate
+	circle.move()
+	circle.update()
+	pygame.display.update()
+	clock.tick(FPS)
+pygame.quit()
